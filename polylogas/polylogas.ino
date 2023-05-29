@@ -12,7 +12,8 @@
 #include <CapacitiveSensor.h>
 
 CapacitiveSensor cs = CapacitiveSensor(8, 7);  // Connect the send pin to digital pin 4, and the receive pin to digital pin 2
-int randNumber;
+int randNumberYes;
+int randNumberNo;
 
 #include <DFRobot_DF1201S.h>
 #include <SoftwareSerial.h>
@@ -39,7 +40,7 @@ void setup(void) {
   /*Wait for the end of the prompt tone */
   delay(2000);
   /*Set playback mode to "repeat all"*/
-  DF1201S.setPlayMode(DF1201S.ALLCYCLE);
+  DF1201S.setPlayMode(DF1201S.SINGLE);
   Serial.print("PlayMode:");
   /*Get playback mode*/
   Serial.println(DF1201S.getPlayMode());
@@ -56,16 +57,40 @@ void setup(void) {
   //DF1201S.disableAMP();
 }
 
+long touchValueOld = cs.capacitiveSensor(70);
+
 void loop() {
-  long touchValue = cs.capacitiveSensor(30);  // Adjust the threshold value as needed
+  long touchValue = cs.capacitiveSensor(70);  // Adjust the threshold value as needed
+  
 
   // Serial.println(touchValue);
-  if (touchValue > 0) {  // Adjust the threshold value as needed
-    randNumber = int(random(2));
-    Serial.println(randNumber+1);
-    DF1201S.playFileNum(/*File Number = */ randNumber+1);
-    delay(1000);
+  if ((touchValue > 0) && (touchValueOld == 0)) {  // Adjust the threshold value as needed
+    randNumberYes = int(random(2,11));
+    // Serial.println(randNumber);
+    Serial.println("TOUCH");
+    Serial.println(randNumberYes);
+    DF1201S.playFileNum(randNumberYes);
+    // DF1201S.playFileNum(1);    
+
+    touchValueOld = touchValue;
+
+  } else if ((touchValue == 0) && (touchValue < touchValueOld)){
+    randNumberNo = int(random(11, 21));
+    // Serial.println(randNumber);
+    Serial.println("NO TOUCH");
+    Serial.println(randNumberNo);
+    DF1201S.playFileNum(randNumberNo);
+    // DF1201S.playFileNum(2);
+
+    touchValueOld = touchValue;
+  } else {
+    DF1201S.pause();
   }
+
+
+
+  delay(1000);
+
   //  delay(8000); // Delay to avoid repeated triggering
 
 
