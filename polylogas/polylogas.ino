@@ -31,7 +31,7 @@ void setup(void) {
     delay(1000);
   }
   /*Set volume to 20*/
-  DF1201S.setVol(/*VOL = */ 20);
+  DF1201S.setVol(/*VOL = */ 40);
   Serial.print("VOL:");
   /*Get volume*/
   Serial.println(DF1201S.getVol());
@@ -65,7 +65,7 @@ void loop() {
 
   // Serial.println(touchValue);
   if ((touchValue > 0) && (touchValueOld == 0)) {  // Adjust the threshold value as needed
-    randNumberYes = int(random(2,11));
+    randNumberYes = int(random(1,16));
     // Serial.println(randNumber);
     Serial.println("TOUCH");
     Serial.println(randNumberYes);
@@ -75,7 +75,7 @@ void loop() {
     touchValueOld = touchValue;
 
   } else if ((touchValue == 0) && (touchValue < touchValueOld)){
-    randNumberNo = int(random(11, 21));
+    randNumberNo = int(random(16, 31));
     // Serial.println(randNumber);
     Serial.println("NO TOUCH");
     Serial.println(randNumberNo);
